@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CCL SmartMine - GPS Safety System</title>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#b7b6cb;
+    color:#17202a;
+}
+
+/* ================= MAIN HEADER ================= */
+
+.main-header{
+    background:#0b2d4d;
+    color:white;
+    padding:18px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.header-logo{
+    width:42px;
+    height:42px;
+    object-fit:cover;
+    border-radius:50%;
+    border:2px solid white;
+}
+
+.main-header button{
+    background:#e74c3c;
+    color:white;
+    border:0;
+    padding:10px 18px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.main-header button:hover{
+    background:#c0392b;
+}
+
+/* ================= LOGIN PAGE ================= */
+
+#loginPage{
+    min-height:calc(100vh - 70px);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:30px;
+
+    background:
+        linear-gradient(
+            rgba(5,25,40,.65),
+            rgba(5,25,40,.65)
+        ),
+        url("Smart-Mining.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+
+/* ================= LOGIN BOX ================= */
+
+.login-box{
+    width:100%;
+    max-width:430px;
+
+    background:rgba(255,255,255,.96);
+
+    padding:30px;
+
+    border-radius:18px;
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.45);
+
+    backdrop-filter:blur(5px);
+}
+
+
+/* ================= PROFESSIONAL LOGO ================= */
+
+.logo-container{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.login-logo{
+    width:95px;
+    height:95px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:5px solid #0b2d4d;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.30);
+
+    background:white;
+}
+
+.logo-title{
+    margin-top:10px;
+
+    color:#0b2d4d;
+
+    font-size:29px;
+
+    font-weight:bold;
+}
+
+.logo-subtitle{
+    color:#555;
+
+    font-size:13px;
+
+    margin-top:5px;
+
+    letter-spacing:1px;
+}
+
+
+/* ================= LOGIN IMAGE ================= */
+
+.login-image{
+    width:100%;
+    height:170px;
+
+    object-fit:cover;
+
+    border-radius:12px;
+
+    margin-bottom:20px;
+
+    display:block;
+}
+
+
+.login-box h1{
+    text-align:center;
+
+    color:#0b2d4d;
+
+    margin-bottom:25px;
+
+    font-size:28px;
+}
+
+
+.login-box label{
+    font-weight:bold;
+
+    display:block;
+
+    margin-top:5px;
+}
+
+
+input,
+select{
+    width:100%;
+
+    padding:13px;
+
+    margin:8px 0 15px;
+
+    border:1px solid #ccc;
+
+    border-radius:7px;
+
+    font-size:15px;
+}
+
+
+input:focus,
+select:focus{
+    outline:none;
+
+    border-color:#0b6efd;
+
+    box-shadow:
+        0 0 0 2px rgba(11,110,253,.15);
+}
+
+
+.btn{
+    width:100%;
+
+    padding:13px;
+
+    border:0;
+
+    border-radius:7px;
+
+    background:#0b6efd;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.btn:hover{
+    background:#0957c7;
+}
+
+
+.login-info{
+    margin-top:18px;
+
+    padding:14px;
+
+    background:#eef6ff;
+
+    border-radius:8px;
+
+    font-size:13px;
+
+    line-height:1.7;
+}
+
+
+/* ================= DASHBOARD ================= */
+
+.dashboard{
+    display:none;
+}
+
+
+/* ================= DASHBOARD HEADER ================= */
+
+.dashboard-header{
+    background:#164e77;
+
+    color:white;
+
+    padding:15px 30px;
+
+    font-size:20px;
+
+    font-weight:bold;
+}
+
+
+/* ================= CONTAINER ================= */
+
+.container{
+    max-width:1200px;
+
+    margin:30px auto;
+
+    padding:15px;
+}
+
+
+/* ================= CARDS ================= */
+
+.cards{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(210px,1fr));
+
+    gap:20px;
+
+    margin:25px 0;
+}
+
+
+.card{
+    background:white;
+
+    padding:22px;
+
+    border-radius:12px;
+
+    box-shadow:
+        0 3px 15px #0001;
+}
+
+
+.card h2{
+    margin-top:10px;
+}
+
+
+/* ================= SOS ================= */
+
+.sos-area{
+    text-align:center;
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:15px;
+
+    margin-top:25px;
+}
+
+
+.sos{
+    width:190px;
+    height:190px;
+
+    border-radius:50%;
+
+    border:10px solid #f5b7b1;
+
+    background:#e74c3c;
+
+    color:white;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 0 25px #e74c3c88;
+}
+
+
+.sos:hover{
+    background:#c0392b;
+}
+
+
+.sos:active{
+    transform:scale(.95);
+}
+
+
+.status{
+    margin-top:20px;
+
+    font-weight:bold;
+}
+
+
+/* ================= MAP ================= */
+
+.map{
+    height:400px;
+
+    width:100%;
+
+    background:#d5dbdb;
+
+    border-radius:12px;
+
+    margin-top:20px;
+
+    overflow:hidden;
+}
+
+
+#minerMap,
+#adminMap{
+    height:400px;
+
+    width:100%;
+}
+
+
+/* ================= GPS INFO ================= */
+
+.gps-info{
+    background:#eef6ff;
+
+    border-left:6px solid #0b6efd;
+
+    padding:15px;
+
+    margin-top:15px;
+
+    border-radius:7px;
+
+    line-height:1.8;
+}
+
+
+.gps-active{
+    color:#188038;
+
+    font-weight:bold;
+}
+
+
+.gps-error{
+    color:#c0392b;
+
+    font-weight:bold;
+}
+
+
+/* ================= ALERT ================= */
+
+.alert{
+    padding:20px;
+
+    background:#fdecea;
+
+    color:#922b21;
+
+    border-left:6px solid #e74c3c;
+
+    margin:15px 0;
+
+    border-radius:7px;
+}
+
+
+.success{
+    padding:20px;
+
+    background:#eafaf1;
+
+    color:#186a3b;
+
+    border-left:6px solid #27ae60;
+
+    margin:15px 0;
+
+    border-radius:7px;
+}
+
+
+/* ================= RESOLVE BUTTON ================= */
+
+.resolve-btn{
+    background:#27ae60;
+
+    color:white;
+
+    border:0;
+
+    padding:12px 20px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    margin-top:10px;
+}
+
+
+.resolve-btn:hover{
+    background:#1e8449;
+}
+
+
+/* ================= TABLE ================= */
+
+.table-container{
+    overflow-x:auto;
+}
+
+
+table{
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:white;
+
+    margin-top:20px;
+}
+
+
+th,
+td{
+    padding:13px;
+
+    border-bottom:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+    background:#0b2d4d;
+
+    color:white;
+}
+
+
+.safe{
+    color:#188038;
+
+    font-weight:bold;
+}
+
+
+.emergency{
+    color:#c0392b;
+
+    font-weight:bold;
+}
+
+
+/* ================= BADGES ================= */
+
+.badge{
+    display:inline-block;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:bold;
+}
+
+
+.badge-safe{
+    background:#d5f5e3;
+
+    color:#186a3b;
+}
+
+
+.badge-danger{
+    background:#fadbd8;
+
+    color:#922b21;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+    .main-header{
+        padding:15px;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .header-logo{
+        width:34px;
+        height:34px;
+    }
+
+    #loginPage{
+        padding:15px;
+    }
+
+    .login-box{
+        padding:22px;
+    }
+
+    .login-image{
+        height:140px;
+    }
+
+    .login-logo{
+        width:80px;
+        height:80px;
+    }
+
+    .logo-title{
+        font-size:24px;
+    }
+
+    .container{
+        margin:15px auto;
+        padding:10px;
+    }
+
+    .sos{
+        width:160px;
+        height:160px;
+    }
+
+    .map,
+    #minerMap,
+    #adminMap{
+        height:330px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- ================================================= -->
+<!-- MAIN HEADER -->
+<!-- ================================================= -->
+
+<header class="main-header">
+
+    <div class="logo">
+
+        <img
+            src="OIP.jpg"
+            class="header-logo"
+            alt="CCL Mining Logo"
+        >
+
+        CCL SMARTMINE
+
+    </div>
+
+    <button
+        id="logoutBtn"
+        onclick="logout()"
+        style="display:none;"
+    >
+        Logout
+    </button>
+
+</header>
+
+
+<!-- ================================================= -->
+<!-- LOGIN PAGE -->
+<!-- ================================================= -->
+
+<div id="loginPage">
+
+    <div class="login-box">
+
+
+        <!-- PROFESSIONAL MINING LOGO -->
+<div class="logo-container">
+
+    <img
+        src="OIP.jpg"
+        class="login-logo"
+        alt="CCL SmartMine Logo"
+    >
+</div>
+        <!-- MINING BACKGROUND IMAGE -->
+
+
+        <h1>
+            ⛏️ Miner Login
+        </h1>
+
+
+        <label>
+            Username
+        </label>
+
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter username"
+        >
+
+
+        <label>
+            Password
+        </label>
+
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+        >
+
+
+        <label>
+            Login As
+        </label>
+
+
+        <select id="role">
+
+            <option value="miner">
+                Miner
+            </option>
+
+            <option value="admin">
+                Admin
+            </option>
+
+        </select>
+
+
+        <button
+            class="btn"
+            onclick="login()"
+        >
+            Login
+        </button>
+
+    </div>
+
+</div>
+<!-- ================================================= -->
+<!-- MINER DASHBOARD -->
+<!-- ================================================= -->
+
+<div
+    id="minerDashboard"
+    class="dashboard"
+>
+
+    <div class="dashboard-header">
+
+        👷 Miner Dashboard
+
+    </div>
+
+
+    <div class="container">
+
+        <h1>
+            Welcome, Gourav Haldar 👷
+        </h1>
+
+
+        <div class="cards">
+
+
+            <div class="card">
+
+                <p>
+                    Employee ID
+                </p>
+
+                <h2>
+                    CCL1025
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <p>
+                    Shift
+                </p>
+
+                <h2>
+                    Morning
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <p>
+                    Mine
+                </p>
+
+                <h2>
+                    CCL Project Mine
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <p>
+                    GPS Status
+                </p>
+
+                <h2 id="locationStatus">
+                    🔄 Starting GPS...
+                </h2>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- LIVE GPS -->
+
+        <div class="card">
+
+            <h2>
+                📍 Live Miner GPS Location
+            </h2>
+
+            <p style="margin-top:10px;">
+
+                Your current location will appear
+                automatically on the map.
+
+            </p>
+
+
+            <div
+                id="minerMap"
+                class="map"
+            ></div>
+
+
+            <div
+                id="gpsInfo"
+                class="gps-info"
+            >
+
+                🔄 Waiting for GPS location...
+
+            </div>
+
+        </div>
+
+
+        <!-- SOS -->
+
+        <div class="sos-area">
+
+            <h2>
+                🚨 Emergency Assistance
+            </h2>
+
+
+            <p style="margin:15px;">
+
+                In case of emergency,
+                press the SOS button.
+
+            </p>
+
+
+            <button
+                class="sos"
+                onclick="sendSOS()"
+            >
+                SOS
+            </button>
+
+
+            <div
+                id="sosStatus"
+                class="status"
+            >
+
+                System Ready
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ================================================= -->
+<!-- ADMIN DASHBOARD -->
+<!-- ================================================= -->
+
+<div
+    id="adminDashboard"
+    class="dashboard"
+>
+
+    <div class="dashboard-header">
+
+        👨‍💼 Admin Control Panel
+
+    </div>
+
+
+    <div class="container">
+
+        <h1>
+            CCL Mine Safety Dashboard
+        </h1>
+
+
+        <div id="adminAlert"></div>
+
+
+        <div class="cards">
+
+
+            <div class="card">
+
+                <p>
+                    Total Miners
+                </p>
+
+                <h2>
+                    120
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <p>
+                    Active Miners
+                </p>
+
+                <h2 id="activeMiners">
+                    112
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <p>
+                    Active Emergency
+                </p>
+
+                <h2 id="emergencyCount">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="card">
+
+                <p>
+                    System Status
+                </p>
+
+                <h2>
+                    🟢 Online
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- MINER MONITORING -->
+
+        <div class="card">
+
+            <h2>
+                👷 Miner Monitoring
+            </h2>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <tr>
+
+                        <th>Employee ID</th>
+
+                        <th>Name</th>
+
+                        <th>Shift</th>
+
+                        <th>Status</th>
+
+                        <th>Location</th>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            CCL1025
+                        </td>
+
+                        <td>
+                            Gourav Haldar
+                        </td>
+
+                        <td>
+                            Morning
+                        </td>
+
+                        <td id="minerStatus">
+
+                            <span class="badge badge-safe">
+                                🟢 SAFE
+                            </span>
+
+                        </td>
+
+                        <td id="adminLocation">
+                            Waiting...
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            CCL1026
+                        </td>
+
+                        <td>
+                            Amit Kumar
+                        </td>
+
+                        <td>
+                            Morning
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-safe">
+                                🟢 SAFE
+                            </span>
+
+                        </td>
+
+                        <td>
+                            Mine Zone A
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            CCL1027
+                        </td>
+
+                        <td>
+                            Rohit Kumar
+                        </td>
+
+                        <td>
+                            Evening
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-safe">
+                                🟢 SAFE
+                            </span>
+
+                        </td>
+
+                        <td>
+                            Mine Zone B
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN MAP -->
+
+        <div
+            class="card"
+            style="margin-top:25px;"
+        >
+
+            <h2>
+                📍 Emergency Location
+            </h2>
+
+
+            <div
+                id="adminMap"
+                class="map"
+            ></div>
+
+        </div>
+
+
+        <!-- HISTORY -->
+
+        <div
+            class="card"
+            style="margin-top:25px;"
+        >
+
+            <h2>
+                🚨 Emergency History
+            </h2>
+
+
+            <div class="table-container">
+
+                <table id="historyTable">
+
+                    <tr>
+
+                        <th>Time</th>
+
+                        <th>Miner</th>
+
+                        <th>Location</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- LEAFLET JS -->
+<!-- ================================================= -->
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+/* ================= GLOBAL VARIABLES ================= */
+
+let currentUser = "";
+
+let currentLocation = {
+    lat:23.3441,
+    lng:85.3096
+};
+
+let gpsAccuracy = 0;
+
+let gpsWatchId = null;
+
+let minerMap = null;
+
+let minerMarker = null;
+
+let minerAccuracyCircle = null;
+
+let adminMap = null;
+
+let adminMarker = null;
+
+
+/* ================= EMERGENCY DATA ================= */
+
+let emergencyData =
+
+JSON.parse(
+    localStorage.getItem("cclEmergency")
+) || [];
+
+
+/* ================= LOGIN ================= */
+
+function login(){
+
+    let username =
+        document.getElementById("username").value.trim();
+
+    let password =
+        document.getElementById("password").value;
+
+    let role =
+        document.getElementById("role").value;
+
+
+    /* MINER */
+
+    if(
+        role === "miner" &&
+        username === "miner" &&
+        password === "1234"
+    ){
+
+        currentUser = "miner";
+
+        document.getElementById(
+            "loginPage"
+        ).style.display = "none";
+
+        document.getElementById(
+            "minerDashboard"
+        ).style.display = "block";
+
+        document.getElementById(
+            "logoutBtn"
+        ).style.display = "block";
+
+        startGPS();
+
+    }
+
+
+    /* ADMIN */
+
+    else if(
+        role === "admin" &&
+        username === "admin" &&
+        password === "admin123"
+    ){
+
+        currentUser = "admin";
+
+        document.getElementById(
+            "loginPage"
+        ).style.display = "none";
+
+        document.getElementById(
+            "adminDashboard"
+        ).style.display = "block";
+
+        document.getElementById(
+            "logoutBtn"
+        ).style.display = "block";
+
+
+        setTimeout(function(){
+
+            loadAdminData();
+
+            if(adminMap){
+
+                adminMap.invalidateSize();
+
+            }
+
+        },300);
+
+    }
+
+    else{
+
+        alert(
+            "❌ Invalid Login Details"
+        );
+
+    }
+
+}
+
+
+/* ================= LOGOUT ================= */
+
+function logout(){
+
+    if(
+        gpsWatchId !== null &&
+        navigator.geolocation
+    ){
+
+        navigator.geolocation.clearWatch(
+            gpsWatchId
+        );
+
+    }
+
+    location.reload();
+
+}
+
+
+/* ================= GPS ================= */
+
+function startGPS(){
+
+    const status =
+        document.getElementById("locationStatus");
+
+    const gpsInfo =
+        document.getElementById("gpsInfo");
+
+
+    if(!navigator.geolocation){
+
+        status.innerHTML =
+            "❌ GPS Not Supported";
+
+        gpsInfo.innerHTML =
+            "<span class='gps-error'>" +
+            "Browser GPS supported nahi karta." +
+            "</span>";
+
+        initializeMinerMap();
+
+        return;
+
+    }
+
+
+    status.innerHTML =
+        "🔄 Getting GPS...";
+
+    gpsInfo.innerHTML =
+        "📡 Requesting GPS location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            updateGPS(position);
+
+            initializeMinerMap();
+
+        },
+
+        function(error){
+
+            handleGPSError(error);
+
+            initializeMinerMap();
+
+        },
+
+        {
+            enableHighAccuracy:true,
+            timeout:15000,
+            maximumAge:0
+        }
+
+    );
+
+
+    gpsWatchId =
+        navigator.geolocation.watchPosition(
+
+            function(position){
+
+                updateGPS(position);
+
+            },
+
+            function(error){
+
+                handleGPSError(error);
+
+            },
+
+            {
+                enableHighAccuracy:true,
+                timeout:15000,
+                maximumAge:0
+            }
+
+        );
+
+}
+
+
+/* ================= UPDATE GPS ================= */
+
+function updateGPS(position){
+
+    currentLocation.lat =
+        position.coords.latitude;
+
+    currentLocation.lng =
+        position.coords.longitude;
+
+    gpsAccuracy =
+        position.coords.accuracy;
+
+
+    const status =
+        document.getElementById("locationStatus");
+
+    const gpsInfo =
+        document.getElementById("gpsInfo");
+
+
+    status.innerHTML =
+        "🟢 GPS Active";
+
+    status.className =
+        "gps-active";
+
+
+    gpsInfo.innerHTML =
+
+        "🟢 <b>Live GPS Active</b>" +
+
+        "<br>" +
+
+        "Latitude: " +
+        currentLocation.lat.toFixed(6) +
+
+        "<br>" +
+
+        "Longitude: " +
+        currentLocation.lng.toFixed(6) +
+
+        "<br>" +
+
+        "Accuracy: approximately " +
+        Math.round(gpsAccuracy) +
+        " meters";
+
+
+    if(minerMap){
+
+        updateMinerMap();
+
+    }
+    else{
+
+        initializeMinerMap();
+
+    }
+
+}
+
+
+/* ================= GPS ERROR ================= */
+
+function handleGPSError(error){
+
+    const status =
+        document.getElementById("locationStatus");
+
+    const gpsInfo =
+        document.getElementById("gpsInfo");
+
+
+    if(!status || !gpsInfo){
+
+        return;
+
+    }
+
+
+    let message =
+        "Unable to get GPS location.";
+
+
+    if(error.code === 1){
+
+        message =
+            "⚠️ GPS permission denied. Location permission allow karein.";
+
+    }
+
+    else if(error.code === 2){
+
+        message =
+            "⚠️ GPS location unavailable.";
+
+    }
+
+    else if(error.code === 3){
+
+        message =
+            "⚠️ GPS request timed out.";
+
+    }
+
+
+    status.innerHTML =
+        "⚠️ GPS Error";
+
+    status.className =
+        "gps-error";
+
+
+    gpsInfo.innerHTML =
+        "<span class='gps-error'>" +
+        message +
+        "</span>";
+
+}
+
+
+/* ================= MINER MAP ================= */
+
+function initializeMinerMap(){
+
+    if(minerMap !== null){
+
+        updateMinerMap();
+
+        return;
+
+    }
+
+
+    minerMap =
+        L.map("minerMap").setView(
+
+            [
+                currentLocation.lat,
+                currentLocation.lng
+            ],
+
+            16
+
+        );
+
+
+    L.tileLayer(
+
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+        {
+            maxZoom:19,
+
+            attribution:
+                "&copy; OpenStreetMap contributors"
+        }
+
+    ).addTo(minerMap);
+
+
+    minerMarker =
+
+        L.marker(
+
+            [
+                currentLocation.lat,
+                currentLocation.lng
+            ]
+
+        ).addTo(minerMap);
+
+
+    minerMarker.bindPopup(
+
+        "<b>👷 CCL Miner</b><br>" +
+        "Live GPS Location"
+
+    );
+
+
+    minerAccuracyCircle =
+
+        L.circle(
+
+            [
+                currentLocation.lat,
+                currentLocation.lng
+            ],
+
+            {
+
+                radius:
+                    gpsAccuracy || 30,
+
+                color:"#0b6efd",
+
+                fillColor:"#0b6efd",
+
+                fillOpacity:0.15
+
+            }
+
+        ).addTo(minerMap);
+
+}
+
+
+/* ================= UPDATE MINER MAP ================= */
+
+function updateMinerMap(){
+
+    if(!minerMap){
+
+        return;
+
+    }
+
+
+    let position = [
+
+        currentLocation.lat,
+        currentLocation.lng
+
+    ];
+
+
+    if(minerMarker){
+
+        minerMarker.setLatLng(position);
+
+    }
+
+
+    if(minerAccuracyCircle){
+
+        minerAccuracyCircle.setLatLng(position);
+
+        minerAccuracyCircle.setRadius(
+            gpsAccuracy || 30
+        );
+
+    }
+
+
+    minerMap.setView(
+
+        position,
+
+        minerMap.getZoom(),
+
+        {
+            animate:true
+        }
+
+    );
+
+}
+
+
+/* ================= SOS ================= */
+
+function sendSOS(){
+
+    if(
+        !confirm(
+            "🚨 Are you sure you want to send an emergency alert?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    let emergency = {
+
+        id:Date.now(),
+
+        miner:"Gourav Haldar",
+
+        employee:"CCL1025",
+
+        time:
+            new Date().toLocaleString(),
+
+        lat:
+            currentLocation.lat,
+
+        lng:
+            currentLocation.lng,
+
+        accuracy:
+            gpsAccuracy,
+
+        status:"ACTIVE",
+
+        resolvedTime:null
+
+    };
+
+
+    emergencyData.push(emergency);
+
+    saveEmergencyData();
+
+
+    document.getElementById(
+        "sosStatus"
+    ).innerHTML =
+        "🚨 EMERGENCY SENT TO ADMIN";
+
+
+    document.getElementById(
+        "sosStatus"
+    ).style.color =
+        "red";
+
+
+    alert(
+
+        "🚨 EMERGENCY ALERT SENT!\n\n" +
+
+        "Admin has been notified.\n\n" +
+
+        "Latitude: " +
+        currentLocation.lat.toFixed(6) +
+
+        "\nLongitude: " +
+        currentLocation.lng.toFixed(6)
+
+    );
+
+
+    playAlarm();
+
+}
+
+
+/* ================= SAVE DATA ================= */
+
+function saveEmergencyData(){
+
+    localStorage.setItem(
+
+        "cclEmergency",
+
+        JSON.stringify(emergencyData)
+
+    );
+
+}
+
+
+/* ================= ALARM ================= */
+
+function playAlarm(){
+
+    try{
+
+        let audioContext =
+
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+
+        let oscillator =
+            audioContext.createOscillator();
+
+
+        let gain =
+            audioContext.createGain();
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audioContext.destination
+        );
+
+
+        oscillator.frequency.value =
+            900;
+
+
+        gain.gain.value =
+            0.3;
+
+
+        oscillator.start();
+
+
+        setTimeout(
+
+            function(){
+
+                oscillator.stop();
+
+            },
+
+            1500
+
+        );
+
+    }
+
+    catch(e){
+
+        console.log(e);
+
+    }
+
+}
+
+
+/* ================= LOAD ADMIN DATA ================= */
+
+function loadAdminData(){
+
+    emergencyData =
+
+        JSON.parse(
+
+            localStorage.getItem(
+                "cclEmergency"
+            )
+
+        ) || [];
+
+
+    let activeEmergencies =
+
+        emergencyData.filter(
+
+            function(e){
+
+                return e.status === "ACTIVE";
+
+            }
+
+        );
+
+
+    document.getElementById(
+        "emergencyCount"
+    ).innerText =
+        activeEmergencies.length;
+
+
+    let table =
+        document.getElementById(
+            "historyTable"
+        );
+
+
+    table.innerHTML = `
+
+        <tr>
+
+            <th>Time</th>
+
+            <th>Miner</th>
+
+            <th>Location</th>
+
+            <th>Status</th>
+
+            <th>Action</th>
+
+        </tr>
+
+    `;
+
+
+    emergencyData
+        .slice()
+        .reverse()
+        .forEach(function(e){
+
+            let row =
+                table.insertRow();
+
+
+            let actionHTML = "";
+
+
+            if(e.status === "ACTIVE"){
+
+                actionHTML = `
+
+                    <button
+                        class="resolve-btn"
+                        onclick="resolveEmergency(${e.id})"
+                    >
+
+                        ✅ MARK AS SAFE
+
+                    </button>
+
+                `;
+
+            }
+
+            else{
+
+                actionHTML =
+                    "✅ Resolved";
+
+            }
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    ${e.time}
+
+                    ${
+                        e.resolvedTime
+                        ?
+                        "<br><small>Resolved: " +
+                        e.resolvedTime +
+                        "</small>"
+                        :
+                        ""
+                    }
+
+                </td>
+
+
+                <td>
+
+                    ${e.miner}
+
+                    <br>
+
+                    <small>
+                        ${e.employee}
+                    </small>
+
+                </td>
+
+
+                <td>
+
+                    ${Number(e.lat).toFixed(6)},
+                    ${Number(e.lng).toFixed(6)}
+
+                </td>
+
+
+                <td>
+
+                    ${
+                        e.status === "ACTIVE"
+
+                        ?
+
+                        "<span class='emergency'>🔴 ACTIVE</span>"
+
+                        :
+
+                        "<span class='safe'>🟢 SAFE</span>"
+                    }
+
+                </td>
+
+
+                <td>
+
+                    ${actionHTML}
+
+                </td>
+
+            `;
+
+        });
+
+
+    if(activeEmergencies.length > 0){
+
+        let lastActive =
+
+            activeEmergencies[
+                activeEmergencies.length - 1
+            ];
+
+
+        document.getElementById(
+            "adminAlert"
+        ).innerHTML = `
+
+            <div class="alert">
+
+                🚨 <b>ACTIVE EMERGENCY ALERT!</b>
+
+                <br><br>
+
+                There are currently
+
+                <b>
+                    ${activeEmergencies.length}
+                </b>
+
+                active emergency alert(s).
+
+                <br><br>
+
+                <b>Latest Emergency</b>
+
+                <br><br>
+
+                👷 Miner:
+                ${lastActive.miner}
+
+                <br>
+
+                🆔 Employee ID:
+                ${lastActive.employee}
+
+                <br>
+
+                🕐 Time:
+                ${lastActive.time}
+
+                <br>
+
+                📍 Location:
+                ${Number(lastActive.lat).toFixed(6)},
+                ${Number(lastActive.lng).toFixed(6)}
+
+                <br><br>
+
+                <button
+                    class="resolve-btn"
+                    onclick="resolveEmergency(${lastActive.id})"
+                >
+
+                    ✅ MARK MINER AS SAFE
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "minerStatus"
+        ).innerHTML =
+
+            "<span class='badge badge-danger'>" +
+            "🔴 EMERGENCY" +
+            "</span>";
+
+
+        document.getElementById(
+            "adminLocation"
+        ).innerHTML =
+
+            "📍 " +
+
+            Number(lastActive.lat).toFixed(6) +
+
+            ", " +
+
+            Number(lastActive.lng).toFixed(6);
+
+
+        initializeAdminMap(
+
+            Number(lastActive.lat),
+
+            Number(lastActive.lng)
+
+        );
+
+    }
+
+
+    else{
+
+        document.getElementById(
+            "adminAlert"
+        ).innerHTML = `
+
+            <div class="success">
+
+                🟢 <b>ALL CLEAR</b>
+
+                <br><br>
+
+                No active emergency alerts.
+
+                <br>
+
+                All miners are currently
+
+                <b>SAFE</b>.
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "minerStatus"
+        ).innerHTML =
+
+            "<span class='badge badge-safe'>" +
+            "🟢 SAFE" +
+            "</span>";
+
+
+        document.getElementById(
+            "adminLocation"
+        ).innerHTML =
+            "✅ Safe / No Emergency";
+
+
+        initializeEmptyAdminMap();
+
+    }
+
+}
+
+
+/* ================= RESOLVE ================= */
+
+function resolveEmergency(id){
+
+    emergencyData =
+
+        JSON.parse(
+
+            localStorage.getItem(
+                "cclEmergency"
+            )
+
+        ) || [];
+
+
+    let emergency =
+
+        emergencyData.find(
+
+            function(e){
+
+                return e.id === id;
+
+            }
+
+        );
+
+
+    if(!emergency){
+
+        alert(
+            "❌ Emergency record not found."
+        );
+
+        return;
+
+    }
+
+
+    if(emergency.status !== "ACTIVE"){
+
+        alert(
+            "This emergency is already resolved."
+        );
+
+        return;
+
+    }
+
+
+    let confirmResolve =
+
+        confirm(
+
+            "✅ Confirm that the miner is safe?\n\n" +
+
+            "Miner: " +
+            emergency.miner +
+
+            "\nEmployee ID: " +
+            emergency.employee +
+
+            "\n\n" +
+
+            "Status will become SAFE."
+
+        );
+
+
+    if(!confirmResolve){
+
+        return;
+
+    }
+
+
+    emergency.status =
+        "RESOLVED";
+
+
+    emergency.resolvedTime =
+        new Date().toLocaleString();
+
+
+    saveEmergencyData();
+
+    loadAdminData();
+
+
+    alert(
+
+        "✅ Emergency resolved successfully!\n\n" +
+
+        "Miner: " +
+        emergency.miner +
+
+        "\n\n" +
+
+        "Status: 🟢 SAFE"
+
+    );
+
+}
+
+
+/* ================= ADMIN MAP ================= */
+
+function initializeAdminMap(lat,lng){
+
+    if(adminMap === null){
+
+        adminMap =
+
+            L.map(
+                "adminMap"
+            ).setView(
+
+                [lat,lng],
+
+                16
+
+            );
+
+
+        L.tileLayer(
+
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+            {
+
+                maxZoom:19,
+
+                attribution:
+                    "&copy; OpenStreetMap contributors"
+
+            }
+
+        ).addTo(adminMap);
+
+    }
+
+    else{
+
+        adminMap.setView(
+            [lat,lng],
+            16
+        );
+
+    }
+
+
+    if(adminMarker){
+
+        adminMarker.setLatLng(
+            [lat,lng]
+        );
+
+    }
+
+    else{
+
+        adminMarker =
+
+            L.marker(
+                [lat,lng]
+            ).addTo(adminMap);
+
+    }
+
+
+    adminMarker.bindPopup(
+
+        "<b>🚨 EMERGENCY LOCATION</b><br><br>" +
+
+        "Miner: Gourav Haldar<br>" +
+
+        "Employee: CCL1025<br><br>" +
+
+        "Latitude: " +
+        lat.toFixed(6) +
+
+        "<br>" +
+
+        "Longitude: " +
+        lng.toFixed(6)
+
+    ).openPopup();
+
+
+    setTimeout(function(){
+
+        adminMap.invalidateSize();
+
+    },100);
+
+}
+
+
+/* ================= EMPTY ADMIN MAP ================= */
+
+function initializeEmptyAdminMap(){
+
+    let defaultLat =
+        23.3441;
+
+    let defaultLng =
+        85.3096;
+
+
+    if(adminMap === null){
+
+        adminMap =
+
+            L.map(
+                "adminMap"
+            ).setView(
+
+                [
+                    defaultLat,
+                    defaultLng
+                ],
+
+                12
+
+            );
+
+
+        L.tileLayer(
+
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+            {
+
+                maxZoom:19,
+
+                attribution:
+                    "&copy; OpenStreetMap contributors"
+
+            }
+
+        ).addTo(adminMap);
+
+
+        adminMarker =
+
+            L.marker(
+
+                [
+                    defaultLat,
+                    defaultLng
+                ]
+
+            ).addTo(adminMap);
+
+    }
+
+    else{
+
+        adminMap.setView(
+
+            [
+                defaultLat,
+                defaultLng
+            ],
+
+            12
+
+        );
+
+
+        if(adminMarker){
+
+            adminMarker.setLatLng(
+
+                [
+                    defaultLat,
+                    defaultLng
+                ]
+
+            );
+
+        }
+
+    }
+
+
+    adminMarker.bindPopup(
+        "📍 No active emergency"
+    );
+
+
+    setTimeout(function(){
+
+        adminMap.invalidateSize();
+
+    },100);
+
+}
+
+
+/* ================= AUTO REFRESH ================= */
+
+setInterval(
+
+    function(){
+
+        if(currentUser === "admin"){
+
+            loadAdminData();
+
+        }
+
+    },
+
+    3000
+
+);
+
+</script>
+
+</body>
+</html>
